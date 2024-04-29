@@ -111,21 +111,46 @@ camera.position.set(5, 30, 30);
 // Update the controls
 controls.update();
 
+// function hoverModel() {
+//   raycaster.setFromCamera(mouse, camera);
+//   const intersects = raycaster.intersectObjects(reefs, true);
+//   reefs.forEach((reef) => {
+//     reef.material.color.set(0xffffff);
+//   });
+//   if (intersects.length > 0) {
+//     intersects[0].object.material.color.set(0xff0000);
+//   }
+
+//   //   tooltip.textContent = "Model Information: " + intersectedObject.reef; // Customize this text
+//   //   tooltip.style.display = "block";
+//   //   tooltip.style.left = event.clientX + 15 + "px";
+//   //   tooltip.style.top = event.clientY + 15 + "px";
+// }
+
 function hoverModel() {
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(reefs, true);
+
   reefs.forEach((reef) => {
     reef.material.color.set(0xffffff);
   });
-  if (intersects.length > 0) {
-    intersects[0].object.material.color.set(0xff0000);
-  }
 
-  //   tooltip.textContent = "Model Information: " + intersectedObject.reef; // Customize this text
-  //   tooltip.style.display = "block";
-  //   tooltip.style.left = event.clientX + 15 + "px";
-  //   tooltip.style.top = event.clientY + 15 + "px";
+  if (intersects.length > 0) {
+    const intersectedObject = intersects[0].object;
+    intersectedObject.material.color.set(0xff0000);
+
+    // Set tooltip text based on the intersected object
+    const tooltip = document.getElementById("tooltip");
+    tooltip.textContent = "Model Information: " + intersectedObject.name;
+    tooltip.style.display = "block";
+  } else {
+    // Hide tooltip if no intersections
+    const tooltip = document.getElementById("tooltip");
+    tooltip.style.display = "none";
+  }
 }
+
+
 // Define the animate function to continuously render the scene
 function animate() {
   requestAnimationFrame(animate);
@@ -152,20 +177,35 @@ function createPanoVideo(filename) {
   scene.add(mesh);
 }
 
-function onMouseMove(event) {
-  // calculate mouse position in normalized device coordinates
-  // (-1 to +1) for both components
+// function onMouseMove(event) {
+//   // calculate mouse position in normalized device coordinates
+//   // (-1 to +1) for both components
 
+//   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+//   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+//   if (document.getElementById("tooltip").style.display !== "none") {
+//     const tooltip = document.getElementById("tooltip");
+//     tooltip.style.left = event.clientX + 15 + "px";
+//     tooltip.style.top = event.clientY + 15 + "px";
+//   }
+// }
+// window.addEventListener("mousemove", onMouseMove, false);
+
+function onMouseMove(event) {
+  // Update mouse position in normalized device coordinates
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-  if (document.getElementById("tooltip").style.display !== "none") {
-    const tooltip = document.getElementById("tooltip");
+  // Update tooltip position
+  const tooltip = document.getElementById("tooltip");
+  if (tooltip.style.display !== "none") {
     tooltip.style.left = event.clientX + 15 + "px";
     tooltip.style.top = event.clientY + 15 + "px";
   }
 }
 window.addEventListener("mousemove", onMouseMove, false);
+
 
 // Call the animate function
 init3d();
